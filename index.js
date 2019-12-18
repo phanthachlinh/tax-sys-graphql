@@ -8,6 +8,10 @@ const typeDefs = gql`
   type Query {
     clients: [Client]
   }
+  type Mutation {
+    validateUser(userName: String, password: String): String
+    registerUser(userName: String, password: String): String
+  }
   type Client {
     _id: String
     first_name: String
@@ -26,10 +30,23 @@ const resolvers = {
   Query: {
     clients: async ()=> {
       return await axios.get('http://127.0.0.1:8888/client/').then(results=>{
-        console.log(results);
         return results.data
       }).catch(err=>console.log(err))
     },
+  },
+  Mutation:{
+    validateUser:async (parent, args)=>{
+      return await axios.post('http://127.0.0.1:8888/user/validate',args).then(results=>{
+        console.log('hgj')
+        return results.data
+      }).catch(err=>console.log(err))
+    },
+    registerUser:async (parent, args)=>{
+      return await axios.post('http://127.0.0.1:8888/user/register',args).then(results=>{
+        console.log('hqqqqqj')
+        return results.data
+      }).catch(err=>console.log(err))
+    }
   }
 }
 const server = new ApolloServer({typeDefs,resolvers});
